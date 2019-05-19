@@ -2,9 +2,9 @@
 
 |Task ID  | Task    | Est. Time to Completion |  Assigned To | Notes |
 |---------| --------|-------------------------|--------------|-------|
-|1        | Assess twitter <--> Python interfaces and choose what to use | 2-3 days | Edward | Can we use libraries or do we interface with Twitter's API directly? Need to ask professor|
+|1        | ~~Assess twitter <--> Python interfaces and choose what to use~~ | 2-3 days | Edward | Can we use libraries or do we interface with Twitter's API directly? Need to ask professor|
 |2        | Assess data to be collected | 2-3 days | TBD | How many political figure's data do we want to collect? Who do we want to collect? Do we need training data? |
-|3        | Evaluate different storage methods for data| 1-2 days | TBD | Do we want to store data as text, JSON, or csv file? What data type do we store it as in memory (list, dict, etc)?|
+|3        | ~~Evaluate different storage methods for data~~| 1-2 days | TBD | Do we want to store data as text, JSON, or csv file? What data type do we store it as in memory (list, dict, etc)?|
 |4        | Collect data that was chosen in 2) using method from 1) and store in method from 3)| 2-3 days | Edward | |
 |5        | Text preprocessing (scrapping) | 3-4 days | TBD | Develop code to 'scrape' data and only gather what we need (i.e. do we need timestamps, hashtags, or just text?)|
 |6        | Assess sentinent analysis | 1-2 days |TBD| Similar to 1). Can we use a library for this or should we write our own?|
