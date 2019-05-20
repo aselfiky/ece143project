@@ -20,9 +20,7 @@ functions or classes. Individual unit tests or quick demos can be found under th
 The following are required:
 1. Python 3.3 or above (tested with 3.6)
     - [Tweepy](https://github.com/tweepy/tweepy)
-    - [Python Twitter Tools](https://github.com/sixohsix/twitter)
-    - [Python-Twitter](https://github.com/bear/python-twitter)
-    - [Twython](https://github.com/ryanmcgrath/twython)
+    - [afinn](https://github.com/fnielsen/afinn)
 2. Jupyter
 
 _Note_: Jupyter **strongly recommends** installing Python and Jupyter using the Anaconda Distribution, which includes Python, the Jupyter
@@ -31,7 +29,7 @@ Notebook, and other commonly used packages for scientific computing and data sci
 The most recent Anaconda release can be found at: https://www.anaconda.com/distribution/ 
 
 ### Installing
-
+#### Jupyter
 As stated above, the Python and Jupyter requirements can be satisfied by using the Anaconda Distribution; the link above provides 
 instructions on how to do so.
 
@@ -46,6 +44,31 @@ To launch the notebook the following command can be used.
 ```
 jupyter notebook
 ```
+#### Afinn
+The afinn library is a Wordlist-based approach for sentiment analysis. The library can be found under libraries/afinn and requires no additional installation. Our sentimet_Analysis class imports the library on construction.
+Here's a quick test to make sure it is working correctly within our module
+```python
+from ourCode import sentiment_Analysis
+test = sentiment_Analysis()
+test._afinn.score('What a great test this is.')
+```
+
+#### Tweepy
+The Tweepy library is our interface to Twitter, the version used can be found under libraries/tweepy. To use this verion the following can be used:
+'''
+cd libraries/tweepy
+python3 setup.py install
+'''
+To use the latest version a simple installation can be done with
+'''
+pip install tweepy
+'''
+or
+'''
+git clone https://github.com/tweepy/tweepy.git
+cd tweepy
+python3 setup.py install
+'''
 
 **_TODO_**_After choosing which Python library to use, include instructions here on how to install it.
 Also include a few commands to run a quick dem (just to make sure installation is working)._
