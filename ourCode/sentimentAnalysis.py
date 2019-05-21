@@ -15,6 +15,7 @@ from tweepy import OAuthHandler
 import sys
 import pickle
 import os
+import csv
 
 class sentiment_Analysis(object):
     '''
@@ -105,6 +106,7 @@ class sentiment_Analysis(object):
             assert fileName.endswith('.txt'), 'Error: Invalid extension'
             assert os.path.isfile(fileName), 'Error: File does not exist'
             assert isinstance(fileName,str), 'Error: Invalid file name'
+            
             with open(fileName,'rb') as handle:
                 tweetDict = pickle.loads(handle.read())
 
@@ -114,7 +116,22 @@ class sentiment_Analysis(object):
             assert fileName.endswith('.csv'), 'Error: Invalid extension'
             assert os.path.isfile(fileName), 'Error: File does not exist'
             assert isinstance(fileName,str), 'Error: Invalid file name'
-            tweetDict = {}
+            
+            # Read csv file into list. 
+            with open(fileName, 'r') as f:
+                reader = csv.reader(f)
+                nameList = list(reader)
+                
+            #Collect tweets for every name in the file
+            for name in nameList:
+                tempDict = self.get_data(name[0], count)
+                if '' in tempDict:
+                    print('No tweets found for ' + name[0])
+                else:
+                    print('Found ' + str(len(tempDict[name[0]])) + \
+                    ' tweets for ' + name[0])
+                    tweetDict.update(tempDict)
+            
         else:
             # Collect 'count' tweets using 'query' as the search term
             assert isinstance(query,str)
@@ -123,7 +140,7 @@ class sentiment_Analysis(object):
             try:
                 # Call twitter API to fetch tweets
                 tweetsJSON = self.api.user_timeline(screen_name=query, \
-                count = count+1, include_rts=False,tweet_mode='extended')
+                count = count, include_rts=False,tweet_mode='extended')
                 
                 #Parse each one
                 tweetList = []
@@ -131,11 +148,6 @@ class sentiment_Analysis(object):
                 for tweet in tweetsJSON:
                     tweetList.append(tweet.full_text)
                     screenName = tweet.user.screen_name
-                    #print(tweet.full_text)
-                    #print('\n')
-                    # Use query as key and store tweets in list
-                    # Make sure not to use
-#                    pass
                 tweetDict[screenName]=tweetList
             except tweepy.TweepError as e:
                 print('Error: ' + str(e))
