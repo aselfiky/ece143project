@@ -13,7 +13,7 @@ in language over time and in certain periods of time.
 
 ## Getting Started
 Perform a git clone, fork, or checkout to get all necessary code. All code performing the four steps above will be available as Python 
-functions or classes. Individual unit tests or quick demos can be found under the *test/* folder as Jupyter notebooks (?). 
+functions or classes. Individual unit tests or quick demos can be found under the *jupyterTests/* folder as Jupyter notebooks. 
 
 ### Prerequisites
 
@@ -55,31 +55,39 @@ test._afinn.score('What a great test this is.')
 
 #### Tweepy
 The Tweepy library is our interface to Twitter, the version used can be found under libraries/tweepy. To use this verion the following can be used:
-'''
+```
 cd libraries/tweepy
 python3 setup.py install
-'''
+```
 To use the latest version a simple installation can be done with
-'''
+```
 pip install tweepy
-'''
+```
 or
-'''
+```
 git clone https://github.com/tweepy/tweepy.git
 cd tweepy
 python3 setup.py install
-'''
+```
 
-**_TODO_**_After choosing which Python library to use, include instructions here on how to install it.
+**_TODO_**: _After choosing which Python library to use, include instructions here on how to install it.
 Also include a few commands to run a quick dem (just to make sure installation is working)._
 
 ## Running the tests
+Unit tests are included in the _jupyterTests/_ directory. These tests assume 3rd party libraries are installed within the _libraries/_ directory but should work even if they are not (as long as their respective setup.py files were used to setup correct paths). You can use these tests as reference or run them directly from a Jupyter notebook.
+### Test Set 1 - Interface to Twitter and data collection/storage
+The first set of tests are for the collection and storage functionality of our class and can be found in the _jupyterTests/get_and_store_data_test.ipynb_ file. The *get_data()* method provides a simple interface to Twitter and supports the following:
++ Perform a single query to collect a certain amount of Tweets from a user (count and user are specified)
++ Load saved Tweets from a file (stored using the *store_data()* method)
++ Read a _.csv_ file with user names and collect Tweets from all corresponding users (count can be specified)
 
-**_TODO_**_Explain how to run the automated tests for this system_
+As stated above, the *store_data()* method can be used to save these Tweets to a file (as a dictionary) and a unit test for this is also provided in the same Jupyter notebook.
+
+**_TODO_**_: Explain how to run the automated tests for this system_
 
 ### Break down into end to end tests
 
-**_TODO_**_Explain what these tests test and why_
+**_TODO_**: _Explain what these tests test and why_
 
 ```
 Give an example
