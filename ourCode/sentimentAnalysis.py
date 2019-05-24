@@ -63,6 +63,39 @@ class sentiment_Analysis(object):
         :return: Same data type as input but cleaned
         
         '''
+        txt = []
+        keys = tweetDict.keys()
+        clean_dict = dict()
+        
+        for i in keys:
+            for j in tweetDict[i]:
+                temp = j.translate(str.maketrans('', '', string.punctuation)).strip()
+                if i in clean_dict.keys():
+                    clean_dict[i].append(temp.lower().split())
+                else:
+                    clean_dict[i] = [temp.lower().split()]
+
+        # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",
+        # Removing noisy data like http...
+        
+        sr= stopwords.words('english')
+        new_sr = sr.append('amp')
+        clean_word = []
+        prefixes = ('https')
+        lemmatizer = WordNetLemmatizer()
+
+        for i in clean_dict.keys():
+            for line in clean_dict[i]:
+                for word in line:
+                    temp = re.sub(r'[^\w\s]', '', word)
+                    if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
+                        lemma = lemmatizer.lemmatize(temp, pos='v')
+                        clean_word.append(lemma)
+            clean_dict[i] = clean_word
+        
+        
+        return clean_dict
+        
         
         return None
     
