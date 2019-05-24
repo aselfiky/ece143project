@@ -16,6 +16,14 @@ import sys
 import pickle
 import os
 import csv
+import string
+import nltk
+import re
+import emoji
+import nltk
+from nltk.tokenize import regexp_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
 class sentiment_Analysis(object):
     '''
@@ -96,8 +104,33 @@ class sentiment_Analysis(object):
         
         return clean_dict
         
-        
-        return None
+    def scrape_emoji(self, tweetSingle='', tweetList=[], tweetDict = {}):
+        '''
+        This is a support function to scrape all the emoji from a user
+        :param tweetSingle: A single tweet to be analyzed
+        :type str:
+        :param tweetList: A list of tweets to be analyzed
+        :type list:
+        :param tweetDict: A dictionary containing {name:tweets} for tweets to 
+        be analyzed
+        :type dictonary:
+        :return: Return a dictionary with key as the user and values as emojilist
+        '''
+        keys = tweetDict.keys()
+        emojilist = []
+        clean_dict = dict()
+
+        for i in keys:
+            for j in tweetDict[i]:
+                temp = j.translate(str.maketrans('', '', string.punctuation)).strip()
+                emsplit = emoji.get_emoji_regexp().split(temp)
+                for k in emsplit:
+                    if k in emoji.UNICODE_EMOJI:
+                        emojilist.append(k)
+            clean_dict[i] = emojilist
+                        
+        return clean_dict
+    
     
     def perform_sentiment_analysis(self, tweetSingle='', tweetList=[], tweetDict = {}):
         '''
