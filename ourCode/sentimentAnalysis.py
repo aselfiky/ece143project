@@ -4,7 +4,7 @@ Created on Sat May 18 21:04:01 2019
 
 @authors: 
     Amr Elfiky 
-    Tianyi Liu
+    Tianyi Lu
     Yuesong Shi
     Edward Zamora 
                 
