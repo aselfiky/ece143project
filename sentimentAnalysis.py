@@ -87,7 +87,9 @@ class sentiment_Analysis(object):
                 else:
                     clean_dict[i] = [temp.lower().split()]
 
-        # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",      removing noisy data like http...
+        # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",
+        # Removing noisy data like http...
+        
         sr= stopwords.words('english')
         new_sr = sr.append('amp')
         clean_word = []
