@@ -95,7 +95,7 @@ Give an example
 
 ## Authors
 * **Amr Elfiky** - *Initial work* - [aselfiky](https://github.com/aselfiky)
-* **Tianyi Liu** - *Initial work* - 
+* **Tianyi Lu** - *Initial work* - [Tianyi Lu](https://github.com/t1lu)
 * **Yuesong Shi** - *Initial work* - [fantastypea](https://github.com/fantastypea)
 * **Edward Zamora** - *Initial work* - [Edward-Zam](https://github.com/Edward-Zam)
 
