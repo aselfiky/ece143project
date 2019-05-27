@@ -179,7 +179,7 @@ class sentiment_Analysis(object):
         '''
         assert isinstance(tweetDict, dict), 'Error: tweetDict must be a dictionary'
 
-        results = []
+        results = {}
         # for each candidate analyze all their words on tweet by tweet basis
         for name, tweets in tweetDict.items():
             afinn = Afinn()
@@ -188,7 +188,7 @@ class sentiment_Analysis(object):
             for tweet in tweets:
                 total_score = total_score + afinn.score(' '.join(word for word in tweet))
                 count = count + 1
-            results.append((name, total_score/count))
+            results[name] = total_score/count
 
         return results
 
