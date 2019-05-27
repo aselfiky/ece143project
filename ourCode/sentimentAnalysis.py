@@ -54,6 +54,9 @@ class sentiment_Analysis(object):
         sys.path.insert(0,'../')
         from libraries.afinn.afinn import Afinn
         self._afinn = Afinn()
+        # download word collections
+        assert nltk.download('stopwords'), "Could not download word list 'stopwords'"
+        assert nltk.download('wordnet'), "Could not download word list 'wordnet'"
 
     def scrape_tweet(self, tweetSingle='', tweetList=[], tweetDict = {}):
         '''
