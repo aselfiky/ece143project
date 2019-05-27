@@ -114,10 +114,10 @@ class sentiment_Analysis(object):
         :return: Return a dictionary with key as the user and values as emojilist
         '''
         keys = tweetDict.keys()
-        emojilist = []
         clean_dict = dict()
 
         for i in keys:
+            emojilist = []
             for j in tweetDict[i]:
                 temp = j.translate(str.maketrans('', '', string.punctuation)).strip()
                 emsplit = emoji.get_emoji_regexp().split(temp)
