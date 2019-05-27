@@ -56,6 +56,9 @@ class sentiment_Analysis(object):
         sys.path.insert(0,'../')
         from libraries.afinn.afinn import Afinn
         self._afinn = Afinn()
+        # download word collections
+        assert nltk.download('stopwords'), "Could not download word list 'stopwords'"
+        assert nltk.download('wordnet'), "Could not download word list 'wordnet'"
 
     def scrape_tweet(self, tweetSingle='', tweetList=[], tweetDict = {}):
         '''
@@ -72,35 +75,67 @@ class sentiment_Analysis(object):
         :return: Same data type as input but cleaned
 
         '''
-        keys = tweetDict.keys()
-        clean_dict = dict()
-
-        for name in keys:
-            for tweet in tweetDict[name]:
-                temp = tweet.translate(str.maketrans('', '', string.punctuation)).strip()
-                if name in clean_dict.keys():
-                    clean_dict[name].append(temp.lower().split())
-                else:
-                    clean_dict[name] = [temp.lower().split()]
-
-        # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",
-        # Removing noisy data like http...
+        assert isinstance(tweetDict, dict)
+        assert isinstance(tweetList, list)
+        assert isinstance(tweetSingle, str)
 
         sr= stopwords.words('english')
         prefixes = ('https')
         lemmatizer = WordNetLemmatizer()
+        clean_word = []
 
-        for i in clean_dict.keys():
-            clean_word = []
-            for line in clean_dict[i]:
+        if tweetSingle != '':
+            temp = tweetSingle.translate(str.maketrans('', '', string.punctuation)).strip()
+            cleanedTweet = temp.lower().split()
+            for word in cleanedTweet:
+                temp = re.sub(r'[^\w\s]', '', word)
+                if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
+                    lemma = lemmatizer.lemmatize(temp, pos='v')
+                    clean_word.append(lemma)
+            return clean_word
+
+        elif len(tweetList) > 0:
+            cleanedTweet = []
+            for tweet in tweetList:
+                temp = tweet.translate(str.maketrans('', '', string.punctuation)).strip()
+                cleanedTweet.append(temp.lower().split())
+            for line in cleanedTweet:
                 for word in line:
                     temp = re.sub(r'[^\w\s]', '', word)
                     if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
                         lemma = lemmatizer.lemmatize(temp, pos='v')
                         clean_word.append(lemma)
-            clean_dict[i] = clean_word
+            return clean_word
 
-        return clean_dict
+        elif len(tweetDict) > 0:
+            keys = tweetDict.keys()
+            clean_dict = dict()
+
+            for name in keys:
+                for tweet in tweetDict[name]:
+                    temp = tweet.translate(str.maketrans('', '', string.punctuation)).strip()
+                    if name in clean_dict.keys():
+                        clean_dict[name].append(temp.lower().split())
+                    else:
+                        clean_dict[name] = [temp.lower().split()]
+
+            # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",
+            # Removing noisy data like http...
+
+            for i in clean_dict.keys():
+                clean_word = []
+                for line in clean_dict[i]:
+                    for word in line:
+                        temp = re.sub(r'[^\w\s]', '', word)
+                        if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
+                            lemma = lemmatizer.lemmatize(temp, pos='v')
+                            clean_word.append(lemma)
+                clean_dict[i] = clean_word
+
+            return clean_dict
+        else:
+            assert False, 'Error with input type.'
+            return None
 
     def scrape_emoji(self, tweetSingle='', tweetList=[], tweetDict = {}):
         '''
@@ -115,10 +150,10 @@ class sentiment_Analysis(object):
         :return: Return a dictionary with key as the user and values as emojilist
         '''
         keys = tweetDict.keys()
-        emojilist = []
         clean_dict = dict()
 
         for i in keys:
+            emojilist = []
             for j in tweetDict[i]:
                 temp = j.translate(str.maketrans('', '', string.punctuation)).strip()
                 emsplit = emoji.get_emoji_regexp().split(temp)
