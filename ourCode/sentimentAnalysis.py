@@ -25,6 +25,7 @@ import nltk
 from nltk.tokenize import regexp_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from afinn import Afinn
 
 class sentiment_Analysis(object):
     '''
@@ -123,14 +124,16 @@ class sentiment_Analysis(object):
             # Removing noisy data like http...
 
             for i in clean_dict.keys():
-                clean_word = []
+                cleaned_tweets = []
                 for line in clean_dict[i]:
+                    clean_word = []
                     for word in line:
                         temp = re.sub(r'[^\w\s]', '', word)
                         if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
                             lemma = lemmatizer.lemmatize(temp, pos='v')
                             clean_word.append(lemma)
-                clean_dict[i] = clean_word
+                    cleaned_tweets.append(clean_word)
+                clean_dict[i] = cleaned_tweets
 
             return clean_dict
         else:
@@ -165,46 +168,27 @@ class sentiment_Analysis(object):
         return clean_dict
 
 
-    def perform_sentiment_analysis(self, fileName, tweetDict = {}):
+    def perform_sentiment_analysis(self, tweetDict = {}):
         '''
         This is a support function to classify sentiment of passed tweets.
 
-        :param fileName: Mapping of sentimal words to postive or negative.
-        :type str:
         :param tweetDict: A dictionary containing {name:tweets} for tweets to
         be analyzed
         :type dictonary:
         :return: List of tuples containing (name, score).
         '''
-        assert isinstance(fileName, str), 'Error: FileName must be input type str'
-        assert fileName.endswith('.csv'), 'Error: Invalid extension'
-        assert os.path.isfile(fileName), 'Error: File does not exist'
         assert isinstance(tweetDict, dict), 'Error: tweetDict must be a dictionary'
 
-        # read file and convert to dictionary
-        df = pd.read_csv('small_tagged.csv')
-        df = df[['word','sentiment']]
-        lookup = {}
-        for index, row in df.iterrows():
-            lookup[row['word']] = row['sentiment']
-
         results = []
-
-        # for each candidate analyze all their words
-        # Scale: [-1, 1] (-1 means 100% negative sentiment and 1 is positive sentiment)
+        # for each candidate analyze all their words on tweet by tweet basis
         for name, tweets in tweetDict.items():
-            score = 0
-            total = 0
-            for word in tweets:
-                if word in lookup:
-                    if lookup[word] == 'pos':
-                        score = score + 1
-                        total = total + 1
-                    elif lookup[word] == 'neg':
-                        score = score - 1
-                        total = total + 1
-
-            results.append((name, score/total))
+            afinn = Afinn()
+            total_score = 0
+            count = 0
+            for tweet in tweets:
+                total_score = total_score + afinn.score(' '.join(word for word in tweet))
+                count = count + 1
+            results.append((name, total_score/count))
 
         return results
 
@@ -331,7 +315,9 @@ def main():
     dic = ss.get_data(count=5, query='collectData', fileName='../data/political_names.csv')
     dic = ss.scrape_tweet(tweetDict=dic)
 
-    print(ss.perform_sentiment_analysis('small_tagged.csv', dic))
+    results = ss.perform_sentiment_analysis(dic)
+    print(results)
+
 
 
 if __name__ == "__main__":
