@@ -20,6 +20,8 @@ import string
 import nltk
 import re
 import emoji
+import pandas as pd
+import nltk
 from nltk.tokenize import regexp_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -76,12 +78,12 @@ class sentiment_Analysis(object):
         assert isinstance(tweetDict, dict)
         assert isinstance(tweetList, list)
         assert isinstance(tweetSingle, str)
-        
+
         sr= stopwords.words('english')
         prefixes = ('https')
         lemmatizer = WordNetLemmatizer()
         clean_word = []
-        
+
         if tweetSingle != '':
             temp = tweetSingle.translate(str.maketrans('', '', string.punctuation)).strip()
             cleanedTweet = temp.lower().split()
@@ -89,9 +91,9 @@ class sentiment_Analysis(object):
                 temp = re.sub(r'[^\w\s]', '', word)
                 if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
                     lemma = lemmatizer.lemmatize(temp, pos='v')
-                    clean_word.append(lemma)    
+                    clean_word.append(lemma)
             return clean_word
-        
+
         elif len(tweetList) > 0:
             cleanedTweet = []
             for tweet in tweetList:
@@ -102,13 +104,13 @@ class sentiment_Analysis(object):
                     temp = re.sub(r'[^\w\s]', '', word)
                     if temp not in sr and len(temp)>2 and not temp.startswith(prefixes):
                         lemma = lemmatizer.lemmatize(temp, pos='v')
-                        clean_word.append(lemma)    
+                        clean_word.append(lemma)
             return clean_word
-        
+
         elif len(tweetDict) > 0:
             keys = tweetDict.keys()
             clean_dict = dict()
-    
+
             for name in keys:
                 for tweet in tweetDict[name]:
                     temp = tweet.translate(str.maketrans('', '', string.punctuation)).strip()
@@ -116,10 +118,10 @@ class sentiment_Analysis(object):
                         clean_dict[name].append(temp.lower().split())
                     else:
                         clean_dict[name] = [temp.lower().split()]
-    
+
             # Next, using NLTK module for text preprocessing, including lemmatizing, removing stopwords such as "a,the,etc",
             # Removing noisy data like http...
-    
+
             for i in clean_dict.keys():
                 clean_word = []
                 for line in clean_dict[i]:
@@ -129,7 +131,7 @@ class sentiment_Analysis(object):
                             lemma = lemmatizer.lemmatize(temp, pos='v')
                             clean_word.append(lemma)
                 clean_dict[i] = clean_word
-    
+
             return clean_dict
         else:
             assert False, 'Error with input type.'
@@ -163,22 +165,48 @@ class sentiment_Analysis(object):
         return clean_dict
 
 
-    def perform_sentiment_analysis(self, tweetSingle='', tweetList=[], tweetDict = {}):
+    def perform_sentiment_analysis(self, fileName, tweetDict = {}):
         '''
-        This is a support function to classify sentiment of passed tweet, list
-        of tweets, or dictionary of {name:tweets}
-        :param tweetSingle: A single tweet to be analyzed
+        This is a support function to classify sentiment of passed tweets.
+
+        :param fileName: Mapping of sentimal words to postive or negative.
         :type str:
-        :param tweetList: A list of tweets to be analyzed
-        :type list:
         :param tweetDict: A dictionary containing {name:tweets} for tweets to
         be analyzed
         :type dictonary:
-        :return: Returns a single value, list of value or dictionary
-        containing {name:value} where the value is a floating point number
+        :return: List of tuples containing (name, score).
         '''
+        assert isinstance(fileName, str), 'Error: FileName must be input type str'
+        assert fileName.endswith('.csv'), 'Error: Invalid extension'
+        assert os.path.isfile(fileName), 'Error: File does not exist'
+        assert isinstance(tweetDict, dict), 'Error: tweetDict must be a dictionary'
 
-        return None
+        # read file and convert to dictionary
+        df = pd.read_csv('small_tagged.csv')
+        df = df[['word','sentiment']]
+        lookup = {}
+        for index, row in df.iterrows():
+            lookup[row['word']] = row['sentiment']
+
+        results = []
+
+        # for each candidate analyze all their words
+        # Scale: [-1, 1] (-1 means 100% negative sentiment and 1 is positive sentiment)
+        for name, tweets in tweetDict.items():
+            score = 0
+            total = 0
+            for word in tweets:
+                if word in lookup:
+                    if lookup[word] == 'pos':
+                        score = score + 1
+                        total = total + 1
+                    elif lookup[word] == 'neg':
+                        score = score - 1
+                        total = total + 1
+
+            results.append((name, score/total))
+
+        return results
 
     def get_data(self, query, count=10, fileName=''):
         '''
@@ -252,6 +280,33 @@ class sentiment_Analysis(object):
 
         return tweetDict
 
+    def get_sentimental_words(self, dictIn):
+        '''
+        This is a support function that eliminates words that cannot determine
+        sentiment, such as nouns.
+        :param dictIn: Dictionary to tag
+        :type dict:
+        :returns set: Words that can determine sentiment (e.g., adjectives, adverbs)
+        '''
+        assert isinstance(dictIn, dict), 'Error: Parameter not a dictionary'
+
+        # parts of speech that can determine sentiment
+        describing_pos = ['RB', 'RBR', 'RBS', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ', 'JJ', 'JJR', 'JJS']
+        tagged = []
+
+        # tag pos for every word from the tweets
+        for name, words in dictIn.items():
+            tweet = nltk.pos_tag(words)
+            tweet = [x[0] for x in tweet if x[1] in describing_pos]
+            tagged.append(tweet)
+
+        # only take unique words that can determine sentiment
+        bag_of_words = []
+        for tagged_tweets in tagged:
+            bag_of_words = set(list(bag_of_words) + tagged_tweets)
+
+        return bag_of_words
+
     def store_data(self,dictIn, fileName):
         '''
         This is a support function use to write a dictionary to file.
@@ -272,8 +327,12 @@ class sentiment_Analysis(object):
 
 def main():
     # Create objects here
-    # Insert visualization code here
-    pass
+    ss = sentiment_Analysis()
+    dic = ss.get_data(count=5, query='collectData', fileName='../data/political_names.csv')
+    dic = ss.scrape_tweet(tweetDict=dic)
+
+    print(ss.perform_sentiment_analysis('small_tagged.csv', dic))
+
 
 if __name__ == "__main__":
     # Calling main function
