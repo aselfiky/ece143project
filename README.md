@@ -21,6 +21,11 @@ The following are required:
 1. Python 3.3 or above (tested with 3.6)
     - [Tweepy](https://github.com/tweepy/tweepy)
     - [afinn](https://github.com/fnielsen/afinn)
+    - [NLTK](https://www.nltk.org/)
+    - [emoji](https://github.com/carpedm20/emoji)
+    
+    
+    
 2. Jupyter
 
 _Note_: Jupyter **strongly recommends** installing Python and Jupyter using the Anaconda Distribution, which includes Python, the Jupyter
@@ -69,6 +74,28 @@ git clone https://github.com/tweepy/tweepy.git
 cd tweepy
 python3 setup.py install
 ```
+#### NLTK
+NLTK is a platform for building Python programs to work with human language data. It provides easy-to-use interfaces to over 50 corpora and lexical resources such as WordNet, along with a suite of text processing libraries for classification, tokenization, stemming, tagging, parsing, and semantic reasoning. We mainly use this module for text preprocessing and tagging the tweets. 
+
+The interactive installer can be initiated using:
+```
+import nltk
+nltk.download()
+```
+Or you can download specific modules used by calling:
+```
+import nltk
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('punkt')
+```
+
+#### EMOJI
+This module is used to extract all emoji used by a user. To use emoji moduel, the installation can be done with:
+```
+pip install emoji --upgrade
+```
+
 
 **_TODO_**: _After choosing which Python library to use, include instructions here on how to install it.
 Also include a few commands to run a quick dem (just to make sure installation is working)._
