@@ -76,9 +76,9 @@ class sentiment_Analysis(object):
         :return: Same data type as input but cleaned
 
         '''
-        assert isinstance(tweetDict, dict)
-        assert isinstance(tweetList, list)
-        assert isinstance(tweetSingle, str)
+        assert isinstance(tweetDict, dict), 'Error: tweetDict must be a dictionary'
+        assert isinstance(tweetList, list), 'Error: tweetList must be a list'
+        assert isinstance(tweetSingle, str), 'Error: tweetSingle must be a string'
 
         sr= stopwords.words('english')
         prefixes = ('https')
@@ -152,6 +152,8 @@ class sentiment_Analysis(object):
         :type dictonary:
         :return: Return a dictionary with key as the user and values as emojilist
         '''
+        assert isinstance(tweetDict, dict), 'Error: tweetDict must be a dictionary'
+        
         keys = tweetDict.keys()
         clean_dict = dict()
 
