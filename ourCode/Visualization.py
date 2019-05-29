@@ -48,42 +48,42 @@ for key in ssDict:
     elif spDict[key] == 'R':
         sRDict[key] = ssDict[key]
 
+# print(sDDict)
+# print(sRDict)
+#creat a list for only sentiment scores
+sslist = [v for v in ssDict.values()]
+sDlist = [v for v in sDDict.values()]
+sRlist = [v for v in sRDict.values()]
 
 plt.rcParams.update({'font.size': 14})
 plt.figure(1)  # bar graph of all sentiment score and two parties separately
-i = 0
-for key in ssDict:
-    if spDict[key] == 'D':
-        plt.bar(i, ssDict[key], color='b')
-    elif spDict[key] == 'R':
-        plt.bar(i, ssDict[key], color='r')
-
-    i = i + 1
-
+plt.hist(sDlist,color='b',label='Democratic')
+plt.hist(sRlist,color='r',label='Republican')
+plt.xticks(np.arange(-2,7,0.5))
 plt.title('Sentiment score by party')
-plt.xlabel('senators')
-plt.ylabel('score')
+plt.xlabel('score')
+plt.ylabel('frequency')
+plt.legend(loc='upper right')
 #plt.show()
 
 plt.figure(2)
-i = 0
-for key in sDDict:
-    plt.bar(i,sDDict[key],color='b')
-    i = i+1
 
+plt.hist(sDlist,color='b',label='Democratic')
 plt.title('Sentiment score of the Democratic Party')
-plt.ylabel('score')
-plt.xlabel('senators')
+plt.xticks(np.arange(-2,7,0.5))
+plt.xlabel('score')
+plt.ylabel('frequency')
+#plt.show()
 
 plt.figure(3)
-i = 0
-for key in sRDict:
-    plt.bar(i,sRDict[key],color='r')
-    i = i+1
-
+plt.hist(sRlist,color='r',label='Republican')
+plt.xticks(np.arange(-2,7,0.5))
+plt.xlabel('score')
+plt.ylabel('frequency')
 plt.title('Sentiment score of Republican Party')
-plt.ylabel('score')
-plt.xlabel('senators')
+#plt.show()
+
+
 
 # (2)mean deviation,std,of two parties' score
 scoreD = [v for v in sDDict.values()]  # The score of Democratic party
