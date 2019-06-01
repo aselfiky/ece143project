@@ -96,29 +96,29 @@ This module is used to extract all emoji used by a user. To use emoji moduel, th
 pip install emoji --upgrade
 ```
 
-
-**_TODO_**: _After choosing which Python library to use, include instructions here on how to install it.
-Also include a few commands to run a quick dem (just to make sure installation is working)._
-
 ## Running the tests
 Unit tests are included in the _jupyterTests/_ directory. These tests assume 3rd party libraries are installed within the _libraries/_ directory but should work even if they are not (as long as their respective setup.py files were used to setup correct paths). You can use these tests as reference or run them directly from a Jupyter notebook.
-### Test Set 1 - Interface to Twitter and data collection/storage
-The first set of tests are for the collection and storage functionality of our class and can be found in the _jupyterTests/get_and_store_data_test.ipynb_ file. The *get_data()* method provides a simple interface to Twitter and supports the following:
+### Unit Tests - Interface to Twitter, data collection/storage and data cleaning
+We have included a set of unit tests of some of the individual methods of our class; these tests are for the collection, storage, loading, and cleaning methods of our class and can be found in the _juptyetTests/unit_tests.ipynb_ file. The *get_data()* method provides a simple interface to Twitter and supports the following:
 + Perform a single query to collect a certain amount of Tweets from a user (count and user are specified)
 + Load saved Tweets from a file (stored using the *store_data()* method)
 + Read a _.csv_ file with user names and collect Tweets from all corresponding users (count can be specified)
 
 As stated above, the *store_data()* method can be used to save these Tweets to a file (as a dictionary) and a unit test for this is also provided in the same Jupyter notebook.
 
-**_TODO_**_: Explain how to run the automated tests for this system_
+Once this data is collected (or loaded) we can test the data scrapping and emoji extraction methods from our class. 
 
-### Break down into end to end tests
-
-**_TODO_**: _Explain what these tests test and why_
+### Visualizations
+Visualizations for the presentation found in _presentation/Analysing Political Figures' Tweets.pptx_. The main fuction of our class creates these visualizations and can be run with the following commands.
 
 ```
-Give an example
+python3 
+from ourCode import sentiment_Analysis
+testObject = sentiment_Analysis()
+testObject.main()
 ```
+
+As a convenience and requirement, the code to generate the visualizations used in the presentations can also be found in the Jupyter notebook in _jupyterTests/visualizations.ipynb_
 
 ## Authors
 * **Amr Elfiky** - *Initial work* - [aselfiky](https://github.com/aselfiky)
