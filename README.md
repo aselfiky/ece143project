@@ -23,6 +23,8 @@ The following are required:
     - [afinn](https://github.com/fnielsen/afinn)
     - [NLTK](https://www.nltk.org/)
     - [emoji](https://github.com/carpedm20/emoji)
+    - [HoloViews](https://github.com/pyviz/holoviews/blob/master/LICENSE.txt)
+    - [hvPlot](https://github.com/pyviz/hvplot)
     
     
     
@@ -91,12 +93,24 @@ nltk.download('punkt')
 ```
 
 #### EMOJI
-This module is used to extract all emoji used by a user. To use emoji moduel, the installation can be done with:
+This module is used to extract all emoji used by a user. To use emoji module, the installation can be done with:
 ```
 pip install emoji --upgrade
 ```
+#### HoloViews and hvPlot
+HoloViews was used for the emoji plot visualizations but it is not required for the rest of the code. It can be installed through the anaconda installer or pip. hvPlot is a plotting API for data containers built with HoloViews, it works alongside HoloViews and is only required for visualizations in our code.
+Using the Conda command:
+```
+conda install -c pyviz holoviews bokeh
+conda install -c pyviz hvplot
+```
+Using pip:
+```
+pip install "holoviews[recommended]"
+pip install hvplot
+```
 
-## Running the tests
+### Running the tests
 Unit tests are included in the _jupyterTests/_ directory. These tests assume 3rd party libraries are installed within the _libraries/_ directory but should work even if they are not (as long as their respective setup.py files were used to setup correct paths). You can use these tests as reference or run them directly from a Jupyter notebook.
 ### Unit Tests - Interface to Twitter, data collection/storage and data cleaning
 We have included a set of unit tests of some of the individual methods of our class; these tests are for the collection, storage, loading, and cleaning methods of our class and can be found in the _juptyetTests/unit_tests.ipynb_ file. The *get_data()* method provides a simple interface to Twitter and supports the following:
@@ -115,7 +129,7 @@ Visualizations for the presentation found in _presentation/Analysing Political F
 python3 
 from ourCode import sentiment_Analysis
 testObject = sentiment_Analysis()
-testObject.main()
+testObject.create_visualizations()
 ```
 
 As a convenience and requirement, the code to generate the visualizations used in the presentations can also be found in the Jupyter notebook in _jupyterTests/visualizations.ipynb_
