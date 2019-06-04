@@ -27,7 +27,7 @@ from nltk.stem import WordNetLemmatizer
 #from afinn import Afinn
 import pandas as pd
 import numpy as np
-import matplotlob.pyplot as plt
+import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from scipy import stats
 
@@ -189,11 +189,10 @@ class sentiment_Analysis(object):
         results = {}
         # for each candidate analyze all their words on tweet by tweet basis
         for name, tweets in tweetDict.items():
-            afinn = Afinn()
             total_score = 0
             count = 0
             for tweet in tweets:
-                total_score = total_score + afinn.score(' '.join(word for word in tweet))
+                total_score = total_score + self._afinn.score(' '.join(word for word in tweet))
                 count = count + 1
             results[name] = total_score/count
 
@@ -316,7 +315,7 @@ class sentiment_Analysis(object):
 
         return None
 
-    def main():
+    def create_visualizations(self):
         '''
         This main function creates the visualizations used for the presentation.
         '''
@@ -326,8 +325,8 @@ class sentiment_Analysis(object):
         sentimentObject = sentiment_Analysis()
         
         # Load dictionary with {name, party} and dictionary with {name, dirty Tweets}
-        spDict = sentimentObject.get_data('loadData', fileName = "../data/senateParty.txt')
-        stDict = sentimentObject.get_data('loadData', fileName = "../data/senateTweets.txt')
+        spDict = sentimentObject.get_data('loadData', fileName = "../data/senateParty.txt")
+        stDict = sentimentObject.get_data('loadData', fileName = "../data/senateTweets.txt")
             
         # Clean dictionary
         stcDict = sentimentObject.scrape_tweet(tweetDict = stDict)
@@ -384,15 +383,15 @@ class sentiment_Analysis(object):
         plt.ylabel('frequency')
         plt.title('Sentiment score of Republican Party')
         #plt.show()
-
+    
         # (2)mean deviation,std,of two parties' score
         scoreD = [v for v in sDDict.values()]  # The score of Democratic party
         scoreR = [v for v in sDDict.values()]  # The score of Republic party
         print(scoreD)
         print(scoreR)
         
-        D = array(scoreD)
-        R = array(scoreR)
+        D = np.array(scoreD)
+        R = np.array(scoreR)
         col_labels = ['Democratic Party', 'Republican Party']
         row_labels = ['max', 'min', 'mean', 'median', 'mode', 'variance', 'std deviation']
         col_colors = ['blue', 'red']
@@ -423,12 +422,12 @@ class sentiment_Analysis(object):
         plt.title('Box plot')
         
         # create two txt files that only contains the clean tweets of two parties.
-        afinn = Afinn()
+        #afinn = Afinn()
         D = open('stcD.txt', 'w+',encoding='utf-8')
         for key in stcDDict:
             for item in stcDDict[key]:
                 for element in item:
-                    if afinn.score(element) != 0:
+                    if self._afinn.score(element) != 0:
                         D.write(element)
                         D.write('\n')
         
@@ -439,7 +438,7 @@ class sentiment_Analysis(object):
         for key in stcRDict:
             for item in stcRDict[key]:
                 for element in item:
-                    if afinn.score(element) != 0:
+                    if self._afinn.score(element) != 0:
                         R.write(element)
                         R.write('\n')
         
@@ -462,8 +461,3 @@ class sentiment_Analysis(object):
         plt.axis('off')
         plt.show()
         
-
-
-if __name__ == "__main__":
-    # Calling main function
-    main()
