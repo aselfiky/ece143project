@@ -23,8 +23,10 @@ The following are required:
     - [afinn](https://github.com/fnielsen/afinn)
     - [NLTK](https://www.nltk.org/)
     - [emoji](https://github.com/carpedm20/emoji)
+    - [wordcloud](https://pypi.org/project/wordcloud/)
     - [HoloViews](https://github.com/pyviz/holoviews/blob/master/LICENSE.txt)
     - [hvPlot](https://github.com/pyviz/hvplot)
+    
     
     
     
@@ -97,6 +99,13 @@ This module is used to extract all emoji used by a user. To use emoji module, th
 ```
 pip install emoji --upgrade
 ```
+
+#### Wordcloud
+This module is use to create the wordclouds used in our presentation. The use the wordcloud module, the installation can be done with:
+```
+pip install wordcloud
+```
+
 #### HoloViews and hvPlot
 HoloViews was used for the emoji plot visualizations but it is not required for the rest of the code. It can be installed through the anaconda installer or pip. hvPlot is a plotting API for data containers built with HoloViews, it works alongside HoloViews and is only required for visualizations in our code.
 Using the Conda command:
